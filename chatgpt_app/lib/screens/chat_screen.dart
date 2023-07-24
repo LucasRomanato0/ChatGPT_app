@@ -1,4 +1,6 @@
+import 'package:chatgpt_app/services/api_services.dart';
 import 'package:chatgpt_app/services/assets_manager.dart';
+import 'package:chatgpt_app/services/services.dart';
 import 'package:chatgpt_app/widgets/chat_widget.dart';
 import 'package:chatgpt_app/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -42,30 +44,7 @@ class _CharScreenState extends State<CharScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              await showModalBottomSheet(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
-                ),
-                backgroundColor: scaffoldBackgroundColor,
-                context: context,
-                builder: (context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: TextWidget(
-                            label: 'Chosen Model:',
-                            fontSize: 16,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              );
+              await Services.showModalSheet(context: context);
             },
             icon: const Icon(
               Icons.more_vert_rounded,
@@ -119,7 +98,13 @@ class _CharScreenState extends State<CharScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          try {
+                            await ApiServices.getModels();
+                          } catch (e) {
+                            print('error $e');
+                          }
+                        },
                         icon: const Icon(
                           Icons.send,
                           color: Colors.white,
