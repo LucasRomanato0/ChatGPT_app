@@ -1,4 +1,6 @@
 import 'package:chatgpt_app/services/assets_manager.dart';
+import 'package:chatgpt_app/widgets/chat_widget.dart';
+import 'package:chatgpt_app/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:chatgpt_app/constants/constants.dart';
@@ -36,10 +38,35 @@ class _CharScreenState extends State<CharScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(AssetsManager.openaiLogo),
         ),
-        title: const Text('Chat GPT'),
+        title: const Text('ChatGPT'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await showModalBottomSheet(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
+                ),
+                backgroundColor: scaffoldBackgroundColor,
+                context: context,
+                builder: (context) {
+                  return Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: TextWidget(
+                            label: 'Chosen Model:',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
             icon: const Icon(
               Icons.more_vert_rounded,
               color: Colors.white,
@@ -54,7 +81,12 @@ class _CharScreenState extends State<CharScreen> {
               child: ListView.builder(
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return const Text('TESTE');
+                  return ChatWidget(
+                    chatIndex: int.parse(
+                      chatMessages[index]['chatIndex'].toString(),
+                    ),
+                    msg: chatMessages[index]['msg'].toString(),
+                  );
                 },
               ),
             ),
@@ -65,7 +97,7 @@ class _CharScreenState extends State<CharScreen> {
                 size: 18,
               ),
 
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               Material(
                 color: card,
@@ -81,7 +113,7 @@ class _CharScreenState extends State<CharScreen> {
                             // TODO send message
                           },
                           decoration: const InputDecoration.collapsed(
-                            hintText: 'Como posso te ajudar?',
+                            hintText: 'How can I help you?',
                             hintStyle: TextStyle(color: Colors.grey),
                           ),
                         ),
