@@ -34,4 +34,39 @@ class ApiServices {
       rethrow;
     }
   }
+
+  // mandar mensagem
+  static Future<void> sendMessage({
+    required String msg,
+    required String modelId,
+  }) async {
+    try {
+      var response = await http.post(
+        Uri.parse("$BASE_URL/completions"),
+        headers: {
+          'Authorization': 'Bearer $API_KEY',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "model": modelId,
+          "prompt": msg,
+          "max_tokens": 100,
+        }),
+      );
+
+      Map jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['error'] != null) {
+        throw HttpException(jsonResponse['error']['message']);
+      }
+
+      if (jsonResponse['choices'].length > 0) {
+        print(
+            "jsonResponse[choices]text ${jsonResponse['choices'][0]['text']}");
+      }
+    } catch (error) {
+      print('error $error');
+      rethrow;
+    }
+  }
 }
